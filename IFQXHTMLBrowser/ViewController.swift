@@ -15,11 +15,19 @@ class ViewController: UIViewController {
         let parser = XHTMLParser()
         let xml = "<xhtml><head></head><body><img src='xxxxxx'/></body></xhtml>"
         let document = parser.documentFrom(xmlStr: xml)
+        print("======All Elements========")
         self.printEleTag(document.rootElement!)
+        
+        let imgEles = document.elements(tagName: EleTagName.Img.rawValue)
+        for imgEle in imgEles {
+            print("======Find With Tag========")
+            print("\(imgEle.tagName!)")
+            print("\(imgEle.attributes)")
+        }
     }
 
     private func printEleTag(ele:Element) {
-        print("\(ele.tagName)")
+        print("\(ele.tagName!)")
         for subEle in ele.children {
             self.printEleTag(subEle)
         }

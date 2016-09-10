@@ -54,6 +54,8 @@ class XHTMLParser: NSObject,NSXMLParserDelegate {
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+        let parentEle = self.tempElement
+        self.tempElement = Element(tagName: elementName, document: self.doc!, parent: parentEle)
         //对属性中的值进行转义
         let attrKeys = attributeDict.keys
         for key in attrKeys {
@@ -61,9 +63,9 @@ class XHTMLParser: NSObject,NSXMLParserDelegate {
             value = value?.stringByReplacingOccurrencesOfString("&lt;", withString: "<")
             value = value?.stringByReplacingOccurrencesOfString("&gt;", withString: ">")
             value = value?.stringByReplacingOccurrencesOfString("&quot;", withString: "\"")
+            self.tempElement?.attributes[key] = value
         }
-        let parentEle = self.tempElement
-        self.tempElement = Element(tagName: elementName, document: self.doc!, parent: parentEle)
+        
         if (self.doc!.rootElement == nil) {
             self.doc!.rootElement = self.tempElement
         }

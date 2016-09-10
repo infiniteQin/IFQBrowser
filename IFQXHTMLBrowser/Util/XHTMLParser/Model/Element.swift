@@ -10,6 +10,10 @@ import UIKit
 
 public enum EleTagName: String {
     case Label = "label"
+    case XHTML = "xhtml"
+    case Header = "header"
+    case Body = "body"
+    case Img  = "img"
 }
 
 public enum EleAttributeName : String {
@@ -22,9 +26,9 @@ class Element : NSObject {
     
     var parent : Element?
     
-    var children : [Element] = []
+    var children = [Element]()
     
-    var attributes = [String:NSObject]()
+    var attributes = [String:AnyObject]()
     
     var tagName : String?
     
@@ -36,7 +40,20 @@ class Element : NSObject {
         self.tagName = tagName;
         self.document = document;
         self.parent = parent;
-        
+    }
+    
+    func subElements(tagName tagName:String) -> [Element] {
+        var rsArr = [Element]()
+        for subEle in self.children {
+            if (subEle.tagName == tagName) {
+                rsArr .append(subEle)
+            }
+            if (subEle.children.count > 0) {
+                let innerArr = subEle.subElements(tagName: tagName)
+                rsArr += innerArr
+            }
+        }
+        return rsArr
     }
     
 }
